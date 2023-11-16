@@ -1,4 +1,4 @@
-package com.helendong.quiz.quizapp.Model;
+package com.helendong.quiz.quizapp.model;
 
 import jakarta.persistence.*;
 
