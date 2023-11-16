@@ -5,6 +5,7 @@ import com.helendong.quiz.quizapp.repository.QuizRepository;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,7 @@ public class QuizService {
         this.quizRepository = quizRepository;
     }
 
+    @Transactional
     public Quiz createQuiz (Quiz newQuiz) {
         validateQuiz(newQuiz);
         Quiz createdQuiz = quizRepository.save(newQuiz);
