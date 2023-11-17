@@ -8,6 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("http://localhost:8080/quiz")
 
@@ -26,6 +31,37 @@ public class QuizController {
         QuizDTO createdQuizDTO = convertToDto(createdQuiz);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdQuizDTO);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<QuizDTO> getQuizById(@PathVariable Long id) {
+        Optional<Quiz> quiz = quizService.getQuizById(id);
+
+        if (quiz.isPresent()) {
+            QuizDTO quizDTO = convertToDto(quiz.get());
+            return ResponseEntity.ok(quizDTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<QuizDTO>> getAllQuizzes() {
+        List<Quiz> allQuizzes = quizService.getAllQuizzes();
+        List<QuizDTO> quizDTOs = new ArrayList<>();
+
+        if (!allQuizzes.isEmpty()) {
+            for (Quiz quiz : allQuizzes) {
+                quizDTOs.add(convertToDto(quiz));
+            }
+            return ResponseEntity.ok(quizDTOs);
+        } else {
+            return ResponseEntity.ok(Collections.emptyList());
+        }
+    }
+
+
+
+
 
     private Quiz convertToEntity(QuizDTO quizDTO) {
         Quiz quiz = new Quiz();
