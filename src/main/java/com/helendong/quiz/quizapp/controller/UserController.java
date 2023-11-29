@@ -3,12 +3,15 @@ package com.helendong.quiz.quizapp.controller;
 import com.helendong.quiz.quizapp.dto.UserDTO;
 import com.helendong.quiz.quizapp.model.User;
 import com.helendong.quiz.quizapp.service.UserService;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -24,10 +27,17 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
-        User newUser = convertToEntity(userDTO);
-        User createdUser = userService.createUser(newUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(convertToDto(createdUser));
+        try {
+            User newUser = convertToEntity(userDTO);
+            User createdUser = userService.createUser(newUser);
+            return ResponseEntity.status(HttpStatus.CREATED).body(convertToDto(createdUser));
+        } catch (ValidationException ve) {
+            UserDTO errorDto = new UserDTO();
+            errorDto.setErrorMessage(ve.getMessage());
+            return ResponseEntity.badRequest().body(errorDto);
+        }
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {

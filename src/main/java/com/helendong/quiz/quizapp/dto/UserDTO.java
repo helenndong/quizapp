@@ -6,6 +6,8 @@ public class UserDTO {
     private String password;
     private String email;
 
+    private String errorMessage;
+
     public UserDTO() {
     }
     public UserDTO(Long id, String username, String password, String email) {
@@ -47,4 +49,11 @@ public class UserDTO {
         this.email = email;
     }
 
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
 }
