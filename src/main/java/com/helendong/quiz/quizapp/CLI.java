@@ -27,7 +27,6 @@ public class CLI implements CommandLineRunner {
 
     public void startCommandLineLoop() {
         System.out.println("Welcome to Quiz Generator!");
-        System.out.println("Enter 'q' to quit.");
 
         while (true) {
             System.out.println("\nMenu:");
@@ -43,11 +42,11 @@ public class CLI implements CommandLineRunner {
                     registerUser();
                     break;
                 case "2":
-                    // loginUser();
+                    loginUser();
                     break;
                 case "3":
-                case "q":
                     System.out.println("Goodbye!");
+                    System.exit(0);
                     return;
                 default:
                     System.out.println("Invalid choice. Please try again.");
@@ -77,7 +76,29 @@ public class CLI implements CommandLineRunner {
         if (response.getStatusCode().is2xxSuccessful()) {
             System.out.println("User registered successfully!");
         } else {
-            System.out.println("User registration failed.");
+            System.out.println(response.getBody().getErrorMessage());
         }
     }
+
+    private void loginUser() {
+        System.out.println("Login:");
+
+        System.out.print("Username: ");
+        String username = scanner.nextLine().trim();
+
+        System.out.print("Password: ");
+        String password = scanner.nextLine().trim();
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername(username);
+        userDTO.setPassword(password);
+
+        ResponseEntity<String> response = userController.authenticateUser(userDTO);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            System.out.println("Login successful!");
+        } else {
+            System.out.println(response.getBody());
+        }
+    }
+
 }

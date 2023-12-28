@@ -23,7 +23,7 @@ public class UserService {
             validateUser(newUser);
             return userRepository.save(newUser);
         } catch (ValidationException ve) {
-            throw new ValidationException("User registration validation failed: " + ve.getMessage());
+            throw new ValidationException("User registration failed: " + ve.getMessage());
         } catch (Exception e) {
             throw new RuntimeException("User registration failed: " + e.getMessage());
         }
@@ -44,7 +44,22 @@ public class UserService {
         if (email == null || email.isEmpty() || !email.matches(".+@.+\\..+")) {
             throw new ValidationException("Invalid email address");
         }
+
+        User existingUser = userRepository.findByUsername(newUser.getUsername());
+        if (existingUser != null) {
+            throw new ValidationException("Username already exists");
+        }
+
     }
+
+    public boolean authenticateUser(String username, String password) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            return user.getPassword().equals(password);
+        }
+        return false;
+    }
+
 
     public User getUserById(Long userId) {
         return userRepository.findById(userId).orElse(null);

@@ -69,10 +69,24 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<String> authenticateUser(@RequestBody UserDTO userDTO) {
+        boolean isAuthenticated = userService.authenticateUser(userDTO.getUsername(), userDTO.getPassword());
+        if (isAuthenticated) {
+            return ResponseEntity.ok("Login successful!");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed. Invalid username or password.");
+        }
+    }
+
+
+
+
+
     private User convertToEntity(UserDTO userDTO) {
         User user = new User();
         user.setUsername(userDTO.getUsername());
-        user.setPassword(userDTO.getPassword()); // Ensure secure handling of passwords
+        user.setPassword(userDTO.getPassword());
         user.setEmail(userDTO.getEmail());
         return user;
     }
