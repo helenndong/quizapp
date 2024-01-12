@@ -16,6 +16,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class UserControllerTest {
 
     @Mock
@@ -51,4 +54,53 @@ public class UserControllerTest {
 
         verify(userService, times(1)).createUser(any(User.class));
     }
+
+    @Test
+    public void getUserById_ExistingUser_ReturnsUser() {
+        // Arrange
+        Long userId = 1000L;
+        User user = new User(userId,"testUser", "password", "test@email.com");
+        user.setId(userId);
+        when(userService.getUserById(userId)).thenReturn(user);
+
+        // Act
+        ResponseEntity<UserDTO> response = userController.getUserById(userId);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(userId, response.getBody().getId());
+    }
+
+    @Test
+    public void getUserById_NonExistingUser_ReturnsNotFound() {
+        // Arrange
+        Long userId = 1000L;
+        when(userService.getUserById(userId)).thenReturn(null);
+
+        // Act
+        ResponseEntity<UserDTO> response = userController.getUserById(userId);
+
+        // Assert
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void getAllUsers_UsersExist_ReturnsUserList() {
+        // Arrange
+        List<User> users = Arrays.asList(new User(1000L,"testUser", "password", "test@email.com"),
+                                         new User(1002L,"testUser2", "password2", "test2@email.com"));
+        when(userService.getAllUsers()).thenReturn(users);
+
+        // Act
+        ResponseEntity<List<UserDTO>> response = userController.getAllUsers();
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(users.size(), response.getBody().size());
+    }
+
+
+
 }
