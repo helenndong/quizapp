@@ -117,6 +117,28 @@ public class UserControllerTest {
         verify(userService, times(1)).deleteUser(USER_ID);
     }
 
+    @Test
+    public void authenticateUser_WithValidCredentials_ReturnsSuccessMessage() {
+        UserDTO userDTO = new UserDTO(USER_ID,"username", "password", null);
+        when(userService.authenticateUser("username", "password")).thenReturn(true);
+
+        ResponseEntity<String> response = userController.authenticateUser(userDTO);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Login successful!", response.getBody());
+    }
+
+    @Test
+    public void authenticateUser_WithInvalidCredentials_ReturnsFailureMessage() {
+        UserDTO userDTO = new UserDTO(USER_ID, "username", "wrongpassword", null);
+        when(userService.authenticateUser("username", "wrongpassword")).thenReturn(false);
+
+        ResponseEntity<String> response = userController.authenticateUser(userDTO);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+        assertEquals("Login failed. Invalid username or password.", response.getBody());
+    }
+
 
 
 
