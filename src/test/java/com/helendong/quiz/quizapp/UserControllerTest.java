@@ -21,6 +21,8 @@ import java.util.List;
 
 public class UserControllerTest {
 
+    private static final Long USER_ID = 1000L;
+
     @Mock
     private UserService userService;
 
@@ -34,8 +36,7 @@ public class UserControllerTest {
 
     @Test
     public void createUser_SuccessfulCreation_ReturnsCreatedUser() {
-        // Arrange
-        UserDTO userDTO = new UserDTO(1000L, "testUser", "password", "test@email.com");
+        UserDTO userDTO = new UserDTO(USER_ID, "testUser", "password", "test@email.com");
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setPassword(userDTO.getPassword());
@@ -43,10 +44,8 @@ public class UserControllerTest {
 
         when(userService.createUser(any(User.class))).thenReturn(user);
 
-        // Act
         ResponseEntity<UserDTO> response = userController.createUser(userDTO);
 
-        // Assert
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals("testUser", response.getBody().getUsername());
@@ -57,49 +56,57 @@ public class UserControllerTest {
 
     @Test
     public void getUserById_ExistingUser_ReturnsUser() {
-        // Arrange
-        Long userId = 1000L;
-        User user = new User(userId,"testUser", "password", "test@email.com");
-        user.setId(userId);
-        when(userService.getUserById(userId)).thenReturn(user);
+        User user = new User(USER_ID,"testUser", "password", "test@email.com");
+        user.setId(USER_ID);
+        when(userService.getUserById(USER_ID)).thenReturn(user);
 
-        // Act
-        ResponseEntity<UserDTO> response = userController.getUserById(userId);
+        ResponseEntity<UserDTO> response = userController.getUserById(USER_ID);
 
-        // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(userId, response.getBody().getId());
+        assertEquals(USER_ID, response.getBody().getId());
     }
 
     @Test
     public void getUserById_NonExistingUser_ReturnsNotFound() {
-        // Arrange
-        Long userId = 1000L;
-        when(userService.getUserById(userId)).thenReturn(null);
+        when(userService.getUserById(USER_ID)).thenReturn(null);
 
-        // Act
-        ResponseEntity<UserDTO> response = userController.getUserById(userId);
+        ResponseEntity<UserDTO> response = userController.getUserById(USER_ID);
 
-        // Assert
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
     public void getAllUsers_UsersExist_ReturnsUserList() {
-        // Arrange
         List<User> users = Arrays.asList(new User(1000L,"testUser", "password", "test@email.com"),
                                          new User(1002L,"testUser2", "password2", "test2@email.com"));
         when(userService.getAllUsers()).thenReturn(users);
 
-        // Act
         ResponseEntity<List<UserDTO>> response = userController.getAllUsers();
 
-        // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(users.size(), response.getBody().size());
     }
+
+    @Test
+    public void updateUser_ExistingUser_ReturnsUpdatedUser() {
+
+        UserDTO userDTO = new UserDTO(USER_ID, "updatedUser", "newPassword", "updated@email.com");
+        User updatedUser = new User();
+        updatedUser.setId(USER_ID);
+        updatedUser.setUsername("updatedUser");
+        updatedUser.setPassword("newPassword");
+        updatedUser.setEmail("updated@email.com");
+        when(userService.updateUser(eq(USER_ID), any(User.class))).thenReturn(updatedUser);
+
+        ResponseEntity<UserDTO> response = userController.updateUser(USER_ID, userDTO);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("updatedUser", response.getBody().getUsername());
+    }
+
 
 
 
