@@ -107,6 +107,16 @@ public class UserControllerTest {
         assertEquals("updatedUser", response.getBody().getUsername());
     }
 
+    @Test
+    public void deleteUser_ExistingUser_ReturnsOkStatus() {
+        doNothing().when(userService).deleteUser(USER_ID);
+
+        ResponseEntity<Void> response = userController.deleteUser(USER_ID);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(userService, times(1)).deleteUser(USER_ID);
+    }
+
 
 
 
