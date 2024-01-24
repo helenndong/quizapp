@@ -24,7 +24,7 @@ public class Quiz {
     private String title;
     private String description;
 
-    @OneToMany(mappedBy = "quiz")
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
     private List<Question> questions;
 
     public Quiz() {

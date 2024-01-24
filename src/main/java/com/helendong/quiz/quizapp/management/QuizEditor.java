@@ -51,6 +51,7 @@ public class QuizEditor {
         System.out.println("2: Add a new question");
         System.out.println("3: Edit existing questions");
         System.out.println("4: Remove a question");
+        System.out.println("5: Delete quiz");
         System.out.print("\nChoose an option: ");
         int choice = scanner.nextInt();
         scanner.nextLine();
@@ -67,6 +68,9 @@ public class QuizEditor {
                 break;
             case 4:
                 removeQuestionFromQuiz(selectedQuiz.getId());
+                break;
+            case 5:
+                removeQuiz(selectedQuiz);
                 break;
             default:
                 System.out.println("Invalid choice.");
@@ -186,6 +190,23 @@ public class QuizEditor {
         Question question = questions.get(questionIndex);
         questionService.deleteQuestion(question.getId());
         System.out.println("Question removed successfully.");
+    }
+
+    private void removeQuiz(Quiz quiz) {
+        if (quiz == null) {
+            System.out.println("No quiz selected to remove.");
+            return;
+        }
+
+        System.out.println("Are you sure you want to remove the quiz: " + quiz.getTitle() + "? (yes/no)");
+        String confirmation = scanner.nextLine().trim();
+
+        if ("yes".equalsIgnoreCase(confirmation)) {
+            quizService.deleteQuiz(quiz.getId());
+            System.out.println("Quiz removed successfully.");
+        } else {
+            System.out.println("Quiz removal canceled.");
+        }
     }
 
 
