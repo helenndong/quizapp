@@ -15,12 +15,12 @@ public class CLI implements CommandLineRunner {
     private final UserController userController;
     private final Scanner scanner = new Scanner(System.in);
 
-    private final Menu menu;
+    private final LoginMenu loginMenu;
 
     @Autowired
-    public CLI(UserController userController, Menu menu) {
+    public CLI(UserController userController, LoginMenu loginMenu) {
         this.userController = userController;
-        this.menu = menu;
+        this.loginMenu = loginMenu;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class CLI implements CommandLineRunner {
                     break;
                 case "2":
                     if (loginUser()) {
-                        menu.loggedInMenu();
+                        loginMenu.loggedInMenu();
                     }
                     break;
                 case "3":
@@ -101,7 +101,7 @@ public class CLI implements CommandLineRunner {
         ResponseEntity<String> response = userController.authenticateUser(userDTO);
         if (response.getStatusCode().is2xxSuccessful()) {
             System.out.println("Login successful!");
-            menu.setUserName(userDTO.getUsername());
+            loginMenu.setUserName(userDTO.getUsername());
             return true;
         } else {
             System.out.println(response.getBody());
