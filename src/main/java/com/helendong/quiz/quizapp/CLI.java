@@ -37,7 +37,7 @@ public class CLI implements CommandLineRunner {
             System.out.println("2. Login");
             System.out.println("3. Quit");
 
-            System.out.print("Enter your choice: ");
+            System.out.print("\nEnter your choice: ");
             String choice = scanner.nextLine().trim();
 
             switch (choice) {
@@ -79,14 +79,14 @@ public class CLI implements CommandLineRunner {
         ResponseEntity<UserDTO> response = userController.createUser(userDTO);
 
         if (response.getStatusCode().is2xxSuccessful()) {
-            System.out.println("User registered successfully!");
+            System.out.println("User registration successful!");
         } else {
             System.out.println(response.getBody().getErrorMessage());
         }
     }
 
     private boolean loginUser() {
-        System.out.println("Login:");
+        System.out.println("\nLogin:");
 
         System.out.print("Username: ");
         String username = scanner.nextLine().trim();

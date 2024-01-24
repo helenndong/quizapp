@@ -30,6 +30,10 @@ public class QuizService {
     public Optional<Quiz> getQuizById(Long quizId) {
         return quizRepository.findById(quizId);
     }
+    public Quiz getQuizWithQuestions(Long quizId) {
+        return quizRepository.findByIdWithQuestions(quizId)
+                .orElseThrow(() -> new ValidationException("Quiz not found with ID: " + quizId));
+    }
 
     public List<Quiz> getAllQuizzes() {
         return quizRepository.findAll();

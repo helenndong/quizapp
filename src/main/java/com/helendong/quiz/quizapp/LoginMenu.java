@@ -29,7 +29,7 @@ public class LoginMenu {
     }
     public void loggedInMenu() {
         while (true) {
-            System.out.println("\nWelcome Back, " + userName+ "!\n");
+            System.out.println("\nWelcome Back, " + userName+ "!");
             System.out.println("1. Start a New Quiz");
             System.out.println("2. Edit a Quiz");
             System.out.println("3. Take a Quiz");
