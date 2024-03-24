@@ -203,9 +203,9 @@ public class QuizEditor {
 
         if ("yes".equalsIgnoreCase(confirmation)) {
             quizService.deleteQuiz(quiz.getId());
-            System.out.println("Quiz removed successfully.");
+            System.out.println("Quiz deleted successfully.");
         } else {
-            System.out.println("Quiz removal canceled.");
+            System.out.println("Quiz deletion canceled.");
         }
     }
 

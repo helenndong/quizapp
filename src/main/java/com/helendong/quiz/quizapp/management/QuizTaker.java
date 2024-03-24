@@ -1,10 +1,8 @@
 package com.helendong.quiz.quizapp.management;
-
 import com.helendong.quiz.quizapp.model.Question;
 import com.helendong.quiz.quizapp.model.Quiz;
 import com.helendong.quiz.quizapp.service.QuestionService;
 import com.helendong.quiz.quizapp.service.QuizService;
-import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

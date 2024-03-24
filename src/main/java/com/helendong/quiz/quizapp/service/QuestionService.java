@@ -1,21 +1,20 @@
 package com.helendong.quiz.quizapp.service;
 
 import com.helendong.quiz.quizapp.model.Question;
-import com.helendong.quiz.quizapp.model.Quiz;
 import com.helendong.quiz.quizapp.repository.QuestionRepository;
 import jakarta.validation.ValidationException;
-import org.hibernate.query.sqm.mutation.internal.cte.CteInsertStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class QuestionService {
 
-    private QuestionRepository questionRepository;
+    private final QuestionRepository questionRepository;
 
     @Autowired
     public QuestionService(QuestionRepository questionRepository) {
@@ -51,6 +50,9 @@ public class QuestionService {
     }
 
     public void deleteQuestion(Long questionId) {
+        if (!questionRepository.existsById(questionId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Question with ID " + questionId + " not found");
+        }
         questionRepository.deleteById(questionId);
     }
 

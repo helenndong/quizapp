@@ -3,6 +3,7 @@ package com.helendong.quiz.quizapp.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table
 
 public class Question {
     @Id

@@ -1,9 +1,13 @@
 package com.helendong.quiz.quizapp.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class QuestionDTO {
 
     private Long id;
+    @NotBlank(message = "Question text cannot be blank")
     private String text;
+    @NotBlank(message = "Answer cannot be blank")
     private String answer;
 
     public QuestionDTO() {
@@ -15,7 +19,6 @@ public class QuestionDTO {
         this.answer = answer;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

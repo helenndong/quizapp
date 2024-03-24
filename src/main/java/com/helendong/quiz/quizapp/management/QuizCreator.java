@@ -1,77 +1,75 @@
+
 package com.helendong.quiz.quizapp.management;
 import com.helendong.quiz.quizapp.model.Question;
 import com.helendong.quiz.quizapp.model.Quiz;
 import com.helendong.quiz.quizapp.service.QuestionService;
 import com.helendong.quiz.quizapp.service.QuizService;
+import com.helendong.quiz.quizapp.utility.UserInputService;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.util.Scanner;
 
 @Component
 public class QuizCreator {
     private final QuizService quizService;
     private final QuestionService questionService;
-    private final Scanner scanner = new Scanner(System.in);
+    private final UserInputService userInputService;
 
     @Autowired
-    public QuizCreator(QuizService quizService, QuestionService questionService) {
+    public QuizCreator(QuizService quizService, QuestionService questionService, UserInputService userInputService) {
         this.quizService = quizService;
         this.questionService = questionService;
+        this.userInputService = userInputService;
     }
 
     public void createNewQuiz() {
         System.out.println("Creating a New Quiz");
 
-        System.out.print("Enter Quiz Title: ");
-        String title = scanner.nextLine().trim();
+        String title = userInputService.requestStringInput("Enter Quiz Title: ");
+        if (title.isEmpty()) {
+            System.out.println("Quiz title cannot be empty.");
+            return;
+        }
 
-        System.out.print("Enter Quiz Description: ");
-        String description = scanner.nextLine().trim();
+        String description = userInputService.requestStringInput("Enter Quiz Description: ");
+        if (description.isEmpty()) {
+            System.out.println("Quiz description cannot be empty.");
+            return;
+        }
 
         Quiz newQuiz = new Quiz();
         newQuiz.setTitle(title);
         newQuiz.setDescription(description);
 
-        Quiz createdQuiz = quizService.createQuiz(newQuiz);
-
-        if (createdQuiz != null) {
+        try {
+            Quiz createdQuiz = quizService.createQuiz(newQuiz);
             System.out.println("New quiz created successfully with title: " + createdQuiz.getTitle());
-            boolean addingQuestions = true;
-            while (addingQuestions) {
-                System.out.println("Add a new question to the quiz:");
-
-                System.out.print("Enter Question Text: ");
-                String questionText = scanner.nextLine().trim();
-
-                System.out.print("Enter Answer: ");
-                String answer = scanner.nextLine().trim();
-
-                Question newQuestion = new Question();
-                newQuestion.setText(questionText);
-                newQuestion.setAnswer(answer);
-
-                newQuestion.setQuiz(createdQuiz);
-
-                try {
-                    questionService.createQuestion(newQuestion);
-                    System.out.println("Question added successfully.");
-                } catch (ValidationException e) {
-                    System.out.println("Failed to add question: " + e.getMessage());
-                }
-
-                System.out.print("\nDo you want to add another question? (yes/no): ");
-                String response = scanner.nextLine().trim();
-                if (!response.equalsIgnoreCase("yes")) {
-                    addingQuestions = false;
-                }
-            }
-
-            System.out.println("Quiz creation complete with questions added.");
-        } else {
-            System.out.println("Failed to create quiz.");
+            addQuestionsToQuiz(createdQuiz);
+        } catch (Exception e) {
+            System.out.println("Failed to create quiz: " + e.getMessage());
         }
-
     }
 
+    private void addQuestionsToQuiz(Quiz createdQuiz) {
+        boolean addingQuestions = true;
+        while (addingQuestions) {
+            String questionText = userInputService.requestStringInput("Enter Question Text: ");
+            String answer = userInputService.requestStringInput("Enter Answer: ");
+
+            Question newQuestion = new Question();
+            newQuestion.setText(questionText);
+            newQuestion.setAnswer(answer);
+            newQuestion.setQuiz(createdQuiz);
+
+            try {
+                questionService.createQuestion(newQuestion);
+                System.out.println("Question added successfully.");
+            } catch (ValidationException e) {
+                System.out.println("Failed to add question: " + e.getMessage());
+            }
+
+            addingQuestions = userInputService.confirm("Do you want to add another question?");
+        }
+        System.out.println("Quiz creation complete with questions added.");
+    }
 }

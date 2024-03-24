@@ -1,9 +1,8 @@
 package com.helendong.quiz.quizapp.controller;
-
 import com.helendong.quiz.quizapp.dto.QuestionDTO;
 import com.helendong.quiz.quizapp.model.Question;
 import com.helendong.quiz.quizapp.service.QuestionService;
-import jakarta.validation.ValidationException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,7 @@ public class QuestionController {
     }
 
     @PostMapping
-    public ResponseEntity<QuestionDTO> createQuestion(@RequestBody QuestionDTO questionDTO) {
+    public ResponseEntity<QuestionDTO> createQuestion(@Valid @RequestBody QuestionDTO questionDTO) {
         Question newQuestion = convertToEntity(questionDTO);
         Question createdQuestion = questionService.createQuestion(newQuestion);
         QuestionDTO createdQuestionDTO = convertToDto(createdQuestion);
@@ -50,25 +49,17 @@ public class QuestionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<QuestionDTO> updateQuestion(@PathVariable Long id, @RequestBody QuestionDTO questionDTO) {
+    public ResponseEntity<QuestionDTO> updateQuestion(@PathVariable Long id, @Valid @RequestBody QuestionDTO questionDTO) {
         Question updatedQuestion = convertToEntity(questionDTO);
-        try {
-            Question savedQuestion = questionService.updateQuestion(id, updatedQuestion);
-            QuestionDTO updatedQuestionDTO = convertToDto(savedQuestion);
-            return ResponseEntity.ok(updatedQuestionDTO);
-        } catch (ValidationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
+        Question savedQuestion = questionService.updateQuestion(id, updatedQuestion);
+        QuestionDTO updatedQuestionDTO = convertToDto(savedQuestion);
+        return ResponseEntity.ok(updatedQuestionDTO);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteQuestion(@PathVariable Long id) {
-        try {
-            questionService.deleteQuestion(id);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        questionService.deleteQuestion(id);
+        return ResponseEntity.ok().build();
     }
 
     private Question convertToEntity(QuestionDTO questionDTO) {
