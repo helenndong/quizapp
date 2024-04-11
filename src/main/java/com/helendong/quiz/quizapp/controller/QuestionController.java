@@ -1,11 +1,15 @@
 package com.helendong.quiz.quizapp.controller;
 import com.helendong.quiz.quizapp.dto.QuestionDTO;
 import com.helendong.quiz.quizapp.model.Question;
+import com.helendong.quiz.quizapp.model.Quiz;
 import com.helendong.quiz.quizapp.service.QuestionService;
+import com.helendong.quiz.quizapp.service.QuizService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -17,10 +21,13 @@ import java.util.Optional;
 public class QuestionController {
 
     private final QuestionService questionService;
+    private QuizService quizService;
+
 
     @Autowired
-    public QuestionController(QuestionService questionService) {
+    public QuestionController(QuestionService questionService, QuizService quizService) {
         this.questionService = questionService;
+        this.quizService = quizService;
     }
 
     @PostMapping
@@ -62,11 +69,22 @@ public class QuestionController {
         return ResponseEntity.ok().build();
     }
 
+    @Transactional
     private Question convertToEntity(QuestionDTO questionDTO) {
         Question question = new Question();
         question.setId(questionDTO.getId());
         question.setText(questionDTO.getText());
         question.setAnswer(questionDTO.getAnswer());
+
+        if (questionDTO.getQuizId() != null) {
+            Optional<Quiz> quizOptional = quizService.getQuizById(questionDTO.getQuizId());
+            if (!quizOptional.isPresent()) {
+                throw new EntityNotFoundException("Quiz not found for id: " + questionDTO.getQuizId());
+            }
+            Quiz quiz = quizOptional.get();
+            question.setQuiz(quiz);
+        }
+
         return question;
     }
 
@@ -76,6 +94,10 @@ public class QuestionController {
         questionDTO.setId(question.getId());
         questionDTO.setText(question.getText());
         questionDTO.setAnswer(question.getAnswer());
+
+        if (question.getQuiz() != null) {
+            questionDTO.setQuizId(question.getQuiz().getId());
+        }
         return questionDTO;
     }
 

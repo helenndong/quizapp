@@ -49,9 +49,11 @@ public class QuestionService {
         }
     }
 
+    @Transactional
     public void deleteQuestion(Long questionId) {
         if (!questionRepository.existsById(questionId)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Question with ID " + questionId + " not found");
+            System.out.println("Question with ID " + questionId + " not found");
+            return;
         }
         questionRepository.deleteById(questionId);
     }

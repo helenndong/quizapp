@@ -1,6 +1,7 @@
 package com.helendong.quiz.quizapp.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class QuestionDTO {
 
@@ -10,13 +11,17 @@ public class QuestionDTO {
     @NotBlank(message = "Answer cannot be blank")
     private String answer;
 
+    @NotNull(message = "Quiz ID cannot be null")
+    private Long quizId;
+
     public QuestionDTO() {
     }
 
-    public QuestionDTO(Long id, String text, String answer) {
+    public QuestionDTO(Long id, String text, String answer, Long quizId) {
         this.id = id;
         this.text = text;
         this.answer = answer;
+        this.quizId = quizId;
     }
 
     public Long getId() {
@@ -43,4 +48,11 @@ public class QuestionDTO {
         this.answer = answer;
     }
 
+    public Long getQuizId() {
+        return quizId;
+    }
+
+    public void setQuizId(Long quizId) {
+        this.quizId = quizId;
+    }
 }

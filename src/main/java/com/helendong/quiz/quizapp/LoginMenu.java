@@ -2,9 +2,9 @@ package com.helendong.quiz.quizapp;
 
 import java.util.Scanner;
 
-import com.helendong.quiz.quizapp.management.QuizCreator;
-import com.helendong.quiz.quizapp.management.QuizEditor;
-import com.helendong.quiz.quizapp.management.QuizTaker;
+import com.helendong.quiz.quizapp.cli.CLIQuizCreator;
+import com.helendong.quiz.quizapp.cli.CLIQuizEditor;
+import com.helendong.quiz.quizapp.cli.CLIQuizTaker;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,14 +13,14 @@ public class LoginMenu {
     private String userName;
     private final Scanner scanner = new Scanner(System.in);
 
-    private final QuizCreator quizCreator;
-    private final QuizEditor quizEditor;
-    private final QuizTaker quizTaker;
+    private final CLIQuizCreator CLIQuizCreator;
+    private final CLIQuizEditor CLIQuizEditor;
+    private final CLIQuizTaker CLIQuizTaker;
 
-    public LoginMenu(QuizCreator quizCreator, QuizEditor quizEditor, QuizTaker quizTaker) {
-        this.quizCreator = quizCreator;
-        this.quizEditor = quizEditor;
-        this.quizTaker = quizTaker;
+    public LoginMenu(CLIQuizCreator CLIQuizCreator, CLIQuizEditor CLIQuizEditor, CLIQuizTaker CLIQuizTaker) {
+        this.CLIQuizCreator = CLIQuizCreator;
+        this.CLIQuizEditor = CLIQuizEditor;
+        this.CLIQuizTaker = CLIQuizTaker;
     }
 
 
@@ -33,20 +33,20 @@ public class LoginMenu {
             System.out.println("1. Start a New Quiz");
             System.out.println("2. Edit a Quiz");
             System.out.println("3. Take a Quiz");
-            System.out.println("4. Logout");
+            System.out.println("4. Return to Main Menu");
 
             System.out.print("\nEnter your choice: ");
             String choice = scanner.nextLine().trim();
 
             switch (choice) {
                 case "1":
-                    quizCreator.createNewQuiz();
+                    CLIQuizCreator.createNewQuiz();
                     break;
                 case "2":
-                    quizEditor.editQuiz();
+                    CLIQuizEditor.editQuiz();
                     break;
                 case "3":
-                    quizTaker.takeQuiz();
+                    CLIQuizTaker.takeQuiz();
                     break;
                 case "4":
                     return;

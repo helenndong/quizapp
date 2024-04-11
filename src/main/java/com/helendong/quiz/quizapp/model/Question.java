@@ -1,6 +1,7 @@
 package com.helendong.quiz.quizapp.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table
@@ -10,7 +11,9 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     private String text;
+    @NotBlank
     private String answer;
 
     @ManyToOne

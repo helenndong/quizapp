@@ -1,7 +1,6 @@
-package com.helendong.quiz.quizapp.management;
+package com.helendong.quiz.quizapp.cli;
 import com.helendong.quiz.quizapp.model.Question;
 import com.helendong.quiz.quizapp.model.Quiz;
-import com.helendong.quiz.quizapp.service.QuestionService;
 import com.helendong.quiz.quizapp.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,16 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 @Component
-public class QuizTaker {
+public class CLIQuizTaker {
 
     private final QuizService quizService;
-    private final QuestionService questionService;
     private final Scanner scanner = new Scanner(System.in);
 
     @Autowired
-    public QuizTaker(QuizService quizService, QuestionService questionService) {
+    public CLIQuizTaker(QuizService quizService) {
         this.quizService = quizService;
-        this.questionService = questionService;
     }
 
     @Transactional
