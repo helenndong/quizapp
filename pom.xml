@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.helendong.quiz</groupId>
-	<artifactId>quizapp</artifactId>
+	<artifactId>qurious</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Quiz Application</name>
 	<description>A CLI based interactive quiz application that allows users to create, take, and manage quizzes.</description>
