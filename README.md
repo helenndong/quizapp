@@ -1,4 +1,4 @@
-# quizapp
+# Qurious
 **Interactive Quiz Application with Spring Boot**
 
 **Description:**
